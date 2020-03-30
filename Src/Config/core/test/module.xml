@@ -1,0 +1,14 @@
+<root path="./">
+	<!--<module	name="Cluster"/>-->
+	<!--<module	name="EchoServer"/>	
+	<module	name="ObjectMgr"/>	-->
+	<module	name="Test"/>	
+	<module name="EventEngine"/>		
+	<module	name="UnitTest"/>	
+	
+	<!--<module	name="MysqlMgr"/>-->
+	<module	name="TextCommand"/>
+	<module	name="Harbor"/>
+	<module	name="LoginControl"/>
+	<module name="Cluster"/>	
+</root>
