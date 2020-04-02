@@ -18,7 +18,7 @@
 
 namespace tools{
 
-#pragma  pack (push, 4)             //°´4×Ö½Ú¶ÔÆë
+#pragma  pack (push, 4)             //æŒ‰4å­—èŠ‚å¯¹é½
 	typedef union _KEY_INT64{
 			struct  
 			{
@@ -37,7 +37,7 @@ namespace tools{
 		};
 		s32 val;
 	}KEYINT32;
-#pragma  pack (pop)                 //È¡ÏûÖªµÀ¶ÔÆë, »Ö¸´È±Ê¡¶ÔÆë
+#pragma  pack (pop)                 //å–æ¶ˆçŸ¥é“å¯¹é½, æ¢å¤ç¼ºçœå¯¹é½
 
 	inline u32  Random()
 	{

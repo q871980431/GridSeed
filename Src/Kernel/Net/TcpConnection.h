@@ -22,7 +22,7 @@ public:
 
 	virtual bool  IsPassiveConnection(void) { return _passive; };
 	virtual void  Send(const char *buff, s32 len);      
-	virtual void  Close(const char *reason);                              //¹Ø±ÕÁ¬½Ó
+	virtual void  Close(const char *reason);                              //Â¹Ã˜Â±Ã•ÃÂ¬Â½Ã“
 	virtual const char * GetRemoteIP();
 	virtual s32   GetRemoteIpAddr();
 	virtual bool  SettingBuffSize(s32 recvSize, s32 sendSize);

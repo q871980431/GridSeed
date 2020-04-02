@@ -1,4 +1,4 @@
-﻿#include "ZoneAOI.h"
+#include "ZoneAOI.h"
 #include "Tools.h"
 #include "StopWatch.h"
 #include <algorithm>  

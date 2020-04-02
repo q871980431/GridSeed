@@ -1,4 +1,4 @@
-﻿#ifndef __Vector_h__
+#ifndef __Vector_h__
 #define __Vector_h__
 #include "MultiSys.h"
 

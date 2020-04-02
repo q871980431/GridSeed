@@ -1,4 +1,4 @@
-﻿#ifndef __T_IndexPool_h__
+#ifndef __T_IndexPool_h__
 #define __T_IndexPool_h__
 #include "MultiSys.h"
 #include "THeap.h"

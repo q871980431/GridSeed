@@ -1,4 +1,4 @@
-﻿#ifndef __Rect_Tree_h__
+#ifndef __Rect_Tree_h__
 #define __Rect_Tree_h__
 #include "Vector.h"
 #include <list>

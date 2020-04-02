@@ -1,4 +1,4 @@
-﻿#ifndef __Convert_h__
+#ifndef __Convert_h__
 #define __Convert_h__
 #include "MultiSys.h"
 inline s32 StrToInt32(const char *val){ ASSERT(val, "error"); return atoi(val); };

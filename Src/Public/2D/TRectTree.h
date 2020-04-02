@@ -1,4 +1,4 @@
-﻿#ifndef __TRect_Tree_h__
+#ifndef __TRect_Tree_h__
 #define __TRect_Tree_h__
 
 #include "Vector.h"

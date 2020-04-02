@@ -155,16 +155,16 @@ namespace core
 	public:
 		const static s32 INIT_SEND_BUFF_SIZE = 1 * 1024;
 		const static s32 INIT_RECV_BUFF_SIZE = 1 * 1024;
-		const static s32 CLOSE_DELAY_TIME = 5;					//�ӳٹر�5S
+		const static s32 CLOSE_DELAY_TIME = 5;					//延迟关闭5S
 
-		virtual bool  IsPassiveConnection(void) = 0;			//�Ƿ��Ǳ�������
+		virtual bool  IsPassiveConnection(void) = 0;			//被动连接
 		virtual void  Send(const char *buff, s32 len) = 0;      //
-		virtual void  Close(const char *reason) = 0;                              //�ر�����
+		virtual void  Close(const char *reason) = 0;                              //关闭连接
 		virtual const char * GetRemoteIP() = 0;
 		virtual s32   GetRemoteIpAddr() = 0;
-		virtual bool  SettingBuffSize(s32 recvSize, s32 sendSize) = 0;	//����ʱ �豣֤�����ݷ��ͺͽ���, ������SetConnectionʱ���е���
+		virtual bool  SettingBuffSize(s32 recvSize, s32 sendSize) = 0;	//设置时需 保证无数据发送和接收, 可以在SetConnection时进行调用
 		virtual s32   GetSessionId() = 0;
-		virtual const char * GetCloseReason() = 0;				//��ȡ�رյ�ԭ��, ������Ϊnullptr
+		virtual const char * GetCloseReason() = 0;				//获取关闭的原因, 不可能为nullptr
 	};
 
 	class ITcpSession

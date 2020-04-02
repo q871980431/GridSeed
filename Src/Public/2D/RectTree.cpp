@@ -1,4 +1,4 @@
-﻿#include "RectTree.h"
+#include "RectTree.h"
 #include "StopWatch.h"
 #include "Tools.h"
 #include <algorithm>  

@@ -20,7 +20,7 @@ LONG _stdcall CDumper::snUnhandledExceptionFilter(PEXCEPTION_POINTERS pException
 
 	wchar_t msg[512];
 	wsprintfW(msg, L"Exception happened. Exception code is xuxinyu test");
-	MessageBoxW(NULL, msg, L"Exception", MB_OK); //ÏÔÊ¾ÏûÏ¢¸øÓÃ»§
+	MessageBoxW(NULL, msg, L"Exception", MB_OK); //æ˜¾ç¤ºæ¶ˆæ¯ç»™ç”¨æˆ·
 
 
 	exit(pExceptionInfo->ExceptionRecord->ExceptionCode);

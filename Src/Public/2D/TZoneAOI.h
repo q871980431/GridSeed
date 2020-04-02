@@ -1,4 +1,4 @@
-﻿#ifndef __TZone_AOI_h__
+#ifndef __TZone_AOI_h__
 #define __TZone_AOI_h__
 #include "Vector.h"
 #include <list>

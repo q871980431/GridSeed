@@ -44,7 +44,7 @@ namespace tools
 #ifdef __cplusplus
     extern "C"{
 #endif
-		//Thread Safe timeFormat = nullʱ�� Ĭ�ϸ�ʽΪ"%4d-%02d-%02d %02d:%02d:%02d"
+		//Thread Safe timeFormat = null时， 默认格式为"%4d-%02d-%02d %02d:%02d:%02d"
         const char * GetCurrentTimeString(const char *timeFormat = nullptr);
         bool UpdateLocalTime(time_t time);
         time_t GetYearTime(s32 year, s32 month, s32 day, s32 hour, s32 min);

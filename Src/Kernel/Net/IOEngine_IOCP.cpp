@@ -216,7 +216,7 @@ bool IOEngineIocp::Init(IKernel *kernel)
 		TRACE_LOG("Epoll Init error, error code:%d", tools::GetSocketError());
 		return false;
 	}
-	//¸ù¾İÏµÍ³µÄCPUÀ´´´½¨¹¤×÷ÕßÏß³Ì
+	//æ ¹æ®ç³»ç»Ÿçš„CPUæ¥åˆ›å»ºå·¥ä½œè€…çº¿ç¨‹
 	//SYSTEM_INFO SystemInfo;
 	//GetSystemInfo(&SystemInfo);
 	for (int i = 0; i < _threadSize; i++)

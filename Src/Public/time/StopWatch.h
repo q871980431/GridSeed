@@ -1,4 +1,4 @@
-﻿#ifndef __COMMON_TIME_STOPWATCH_H__
+#ifndef __COMMON_TIME_STOPWATCH_H__
 #define __COMMON_TIME_STOPWATCH_H__
 #include "MultiSys.h"
 #include <chrono>

@@ -64,12 +64,12 @@ namespace tlib {
 			x->_level[i]._next = update[i]->_level[i]._next;
 			update[i]->_level[i]._next = x;
 
-			// Span ´ú±íµ±Ç°½Úµãµ½ next½ÚµãµÄ¾àÀë
-			// ¼´²åÈëºó span ±äÎªÁË update[i]->_level[i].span + 1,
-			//x->_level[i].span Îªx½Úµã µ½ x->_level[i]._nextµÄ¾àÀë ¹ÊÎª Ô­À´µÄ¾àÀëspan - (rank[i]½Úµã µ½ rank[0]µÄ¾àÀë)
-			//´ò¸ö±È·½ A B D, A µ½DµÄ¾àÀë Îª2, ÏÖÔÚ²åÈëC, ²åÈëºóL(A,D) = 4 = L(A,C) + L(C,D), 
-			//ÔÚ²åÈëºó ¿ÉµÃL(C,D) = Ô­L(A,D) - L(A,B)=> L(A,D) - (L(0,B) - L(0,A)), Ô­L(A,D) + 1 = ÏÖL(A,D) (¼ÓÈëÁËC)
-			//²åÈëºó, L(A,C) = L(A,B) + 1;
+			// Span ä»£è¡¨å½“å‰èŠ‚ç‚¹åˆ° nextèŠ‚ç‚¹çš„è·ç¦»
+			// å³æ’å…¥å span å˜ä¸ºäº† update[i]->_level[i].span + 1,
+			//x->_level[i].span ä¸ºxèŠ‚ç‚¹ åˆ° x->_level[i]._nextçš„è·ç¦» æ•…ä¸º åŸæ¥çš„è·ç¦»span - (rank[i]èŠ‚ç‚¹ åˆ° rank[0]çš„è·ç¦»)
+			//æ‰“ä¸ªæ¯”æ–¹ A B D, A åˆ°Dçš„è·ç¦» ä¸º2, ç°åœ¨æ’å…¥C, æ’å…¥åL(A,D) = 4 = L(A,C) + L(C,D), 
+			//åœ¨æ’å…¥å å¯å¾—L(C,D) = åŸL(A,D) - L(A,B)=> L(A,D) - (L(0,B) - L(0,A)), åŸL(A,D) + 1 = ç°L(A,D) (åŠ å…¥äº†C)
+			//æ’å…¥å, L(A,C) = L(A,B) + 1;
 			x->_level[i].span = update[i]->_level[i].span - (rank[0] - rank[i]);
 			update[i]->_level[i].span = (rank[0] - rank[i]) + 1;
 		}

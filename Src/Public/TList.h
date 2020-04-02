@@ -1,4 +1,4 @@
-﻿#ifndef __T_List_h__
+#ifndef __T_List_h__
 #define __T_List_h__
 #include "MultiSys.h"
 #include <mutex>

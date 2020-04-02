@@ -1,4 +1,4 @@
-﻿#ifndef __Zone_AOI_h__
+#ifndef __Zone_AOI_h__
 #define __Zone_AOI_h__
 #include "Vector.h"
 #include <list>

@@ -42,14 +42,14 @@ extern "C"  {
 
         HANDLE hToken;
         TOKEN_PRIVILEGES tkp;
-        //////////////////»ñµÃSE_SYSTEMTIME_NAMEÈ¨ÏŞ//////////////////
+        //////////////////è·å¾—SE_SYSTEMTIME_NAMEæƒé™//////////////////
         // Get a token for this process. 
         if (!OpenProcessToken(GetCurrentProcess(),
             TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &hToken))
             return false;
 
         // Get the LUID for the shutdown privilege.
-        //(»ñµÃSE_SYSTEMTIME_NAMEÈ¨ÏŞ£¬²Å¿ÉÉèÖÃÏµÍ³Ê±¼ä³É¹¦) 
+        //(è·å¾—SE_SYSTEMTIME_NAMEæƒé™ï¼Œæ‰å¯è®¾ç½®ç³»ç»Ÿæ—¶é—´æˆåŠŸ) 
         LookupPrivilegeValue(NULL, SE_SYSTEMTIME_NAME,
             &tkp.Privileges[0].Luid);
 
@@ -67,7 +67,7 @@ extern "C"  {
 #elif defined LINUX
         struct timeval tv;
         struct timezone tz;
-        gettimeofday(&tv, &tz);//»ñÈ¡Ê±Çø±£´ætzÖĞ  
+        gettimeofday(&tv, &tz);//è·å–æ—¶åŒºä¿å­˜tzä¸­  
         tv.tv_sec = time;
         tv.tv_usec = 0;
         return (settimeofday(&tv, &tz) < 0) ? false : true;

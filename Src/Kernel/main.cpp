@@ -17,7 +17,7 @@ static Dumper dumper;
 void test1() {
 	int *p;
 	p = (int*)0x100;
-	*p = 0; //Ğ´0x100µØÖ·, Õâ¸öÊÇ·Ç·¨µÄ
+	*p = 0; //å†™0x100åœ°å€, è¿™ä¸ªæ˜¯éæ³•çš„
 }
 
 int main( int argc, char **argv )

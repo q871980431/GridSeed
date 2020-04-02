@@ -15,7 +15,7 @@ void ExceptionMgr::Init()
 	//segvcatch::init_segv(nullptr);
 	//segvcatch::init_fpe(nullptr);
 
-	//segvcatch::init_segv(ExceptionHandFun);	//¿ÉÒÔ²ÉÓÃ ÔÚlinux»Øµ÷¹ı³ÌÖĞ ´òÓ¡dumpÎÄ¼ş, ´ïµ½ºÍÔ­Éú²¶»ñĞÅºÅÁ¿Ò»ÖÂµÄĞ§¹û
+	//segvcatch::init_segv(ExceptionHandFun);	//å¯ä»¥é‡‡ç”¨ åœ¨linuxå›è°ƒè¿‡ç¨‹ä¸­ æ‰“å°dumpæ–‡ä»¶, è¾¾åˆ°å’ŒåŸç”Ÿæ•è·ä¿¡å·é‡ä¸€è‡´çš„æ•ˆæœ
 	//segvcatch::init_fpe(ExceptionHandFun);
 	signal(SIGFPE, CatchSignal);
 	signal(SIGSEGV, CatchSignal);
