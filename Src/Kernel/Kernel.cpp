@@ -91,22 +91,20 @@ bool Kernel::Initialize(s32 argc, char **argv)
 {\
 	int64_t costTime = stopWatch.Interval();\
 	if (costTime > (Time))\
-		TRACE_LOG(Content expends time:%ld, costTime);\
+		TRACE_LOG("%s expends time:%ld", Content, costTime);\
 	stopWatch.Reset();\
 }
 
 void Kernel::Loop()
 {
 	ExceptionMgr::Init();
-	s64 iLastTime = tools::GetTimeMillisecond();
-	s64 iNowTime = iLastTime;
 	s32	iCpuTime = 0;
 	tools::StopWatch<> stopWatch;
 	tools::StopWatch<> loadWatch;
 	tools::StopWatch<> cpuWatch;
+
     while (true)
     {
-		iNowTime = tools::GetTimeMillisecond();
 		stopWatch.Reset();
 		cpuWatch.Reset();
 		if (!_asyncQueues.empty())
@@ -118,7 +116,7 @@ void Kernel::Loop()
 			for (auto &asyncQueue : _asyncQueues)
 				asyncQueue.second->Loop(execTime);
 		}
-		TRACE_LOG_STOP_WATCH(stopWatch, 0, async queue);
+		TRACE_LOG_STOP_WATCH(stopWatch, 0, "async queue");
 		NetService::GetInstance()->Process(this, MODULE_EXPENDS_TIME);
 		TRACE_LOG_STOP_WATCH(stopWatch, MODULE_EXPENDS_TIME, "net service");
 		TimerMgr::GetInstance()->Process(MODULE_EXPENDS_TIME);
@@ -134,7 +132,7 @@ void Kernel::Loop()
 		s64 interval = loadWatch.Interval();
 		if (loadWatch.Interval() > KERNEL_LOAD_PRF_TIME)
 		{
-			TRACE_LOG("runtime:%ld ms, cpu time:%ld ms, load val:%.2f%%", interval, iCpuTime, (iCpuTime * 100.f) / interval);
+			TRACE_LOG("runtime:%ld ms, cpu time:%d ms, load val:%.2f%%", interval, iCpuTime, (iCpuTime * 100.f) / interval);
 			loadWatch.Reset();
 			iCpuTime = 0;
 		}

@@ -12,12 +12,12 @@ extern "C"  {
 //===================================START===============================
 void GetFileNameNotExtension(const char *name, char out[MAX_PATH])
 {
-    tools::SafeMemset(out, sizeof(out), 0, sizeof(out));
+    tools::SafeMemset(out, MAX_PATH, 0, MAX_PATH);
     const char *pos = strchr(name, '.');
     if (nullptr != pos)
-        tools::SafeMemcpy(out, sizeof(out), name, (pos - name));
+        tools::SafeMemcpy(out, MAX_PATH, name, (pos - name));
     else
-        tools::SafeStrcpy(out, sizeof(out), name, strlen(name));
+        tools::SafeStrcpy(out, MAX_PATH, name, strlen(name));
 }
 
 bool CheckFileExtension(const char *filename, const char *extension)
@@ -31,7 +31,7 @@ bool CheckFileExtension(const char *filename, const char *extension)
 void GetDirName(const char *dirpath, char name[MAX_PATH])
 {
     s32 len = strlen(dirpath);
-    tools::SafeMemset(name, sizeof(name), 0, sizeof(name));
+    tools::SafeMemset(name, MAX_PATH, 0, MAX_PATH);
 
     s32 start = len - 1;
     while (start >= 0 && dirpath[start] == '/')
@@ -49,7 +49,7 @@ void GetDirName(const char *dirpath, char name[MAX_PATH])
         }
     }
 
-    tools::SafeMemcpy(name, sizeof(name), pos + 1, &dirpath[start] - pos);
+    tools::SafeMemcpy(name, MAX_PATH, pos + 1, &dirpath[start] - pos);
 }
 
 #ifdef WIN32
@@ -60,7 +60,7 @@ void GetDirName(const char *dirpath, char name[MAX_PATH])
         tools::FileName file(dirpath);
         file << "/*";
 
-        hFind = FindFirstFile(file.GetString(), &FindFileData); //¸Ãº¯Êý»á»ñÈ¡·ûºÏÌõ¼þµÄµÚÒ»¸öÎÄ¼þÃû£¬²¢»ñµÃÒ»¸ö¾ä±ú¸øFindNextFile»òFindCloseÊ¹ÓÃ.  
+        hFind = FindFirstFile(file.GetString(), &FindFileData); //ï¿½Ãºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½Ò»ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½FindNextFileï¿½ï¿½FindCloseÊ¹ï¿½ï¿½.  
         if (hFind == INVALID_HANDLE_VALUE){
             return;
         }
@@ -70,7 +70,7 @@ void GetDirName(const char *dirpath, char name[MAX_PATH])
                 tools::FileAttr attr;
                 if (strcmp(FindFileData.cFileName, "..") == 0)
                     continue;
-                ECHO("%s", FindFileData.cFileName);             //ÕâÐÐÓï¾ä»áÊä³öËùÓÐ·ûºÏÌõ¼þµÄÎÄ¼þÃû 
+                ECHO("%s", FindFileData.cFileName);             //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ 
                 attr.attrib = 0;
                 if (FindFileData.dwFileAttributes & FILE_ATTRIBUTE_READONLY)
                     attr.attrib |= _A_RDONLY;
@@ -160,7 +160,7 @@ void GetDirName(const char *dirpath, char name[MAX_PATH])
             tools::FileAttr attr;
             if (strcmp(filename->d_name, "..") == 0)
                 continue;
-            ECHO("file %s, type:%d, mode:%d", filename->d_name, filename->d_type, statbuf.st_mode);                           //ÕâÐÐÓï¾ä»áÊä³öËùÓÐ·ûºÏÌõ¼þµÄÎÄ¼þÃû 
+            ECHO("file %s, type:%d, mode:%d", filename->d_name, filename->d_type, statbuf.st_mode);                           //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ 
             attr.attrib = 0;
             if (S_ISDIR(statbuf.st_mode))
                 attr.attrib |= _A_SUBDIR;

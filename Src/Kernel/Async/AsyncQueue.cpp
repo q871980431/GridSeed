@@ -1,7 +1,6 @@
 #include "AsyncQueue.h"
 #include "XmlReader.h"
-#include "../kernel.h"
-#include "ConfigMgr.h"
+#include "../Kernel.h"
 #include "AsyncThread.h"
 
 bool AsyncQueue::Ready() {

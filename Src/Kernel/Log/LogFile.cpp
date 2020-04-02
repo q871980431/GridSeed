@@ -5,7 +5,6 @@
 bool LogFile::Open(const char *path, const char *name)
 {
     char filePath[MAX_PATH];
-    s32 len = 0;
     ASSERT(nullptr == _file, "file exist");
     SafeSprintf(filePath, sizeof(filePath), "%s/%s", path, name);
     _file = fopen(filePath, "ab+");

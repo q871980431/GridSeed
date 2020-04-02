@@ -103,7 +103,7 @@ void TcpConnection::OnEstablish()
 
 void TcpConnection::OnTerminate(bool recvFin, s32 errorCode)
 {
-	//tcpsession == null ±êÖ¾×ÅÒÑ¾­Ö÷¶¯closeÁË
+	//tcpsession == null ï¿½ï¿½Ö¾ï¿½ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½ï¿½closeï¿½ï¿½
 	if (_tcpSession)
 	{
 		char buff[256];
@@ -129,7 +129,7 @@ void TcpConnection::OnRecv(IKernel *kernel)
 		if (_tcpSession == nullptr)
 			return;
 
-		rcvBuff = _ioDriver->GetRecvBuff();			//¿ÉÄÜÐÞ¸Ä¸ÃrcvBuffPtr
+		rcvBuff = _ioDriver->GetRecvBuff();			//ï¿½ï¿½ï¿½ï¿½ï¿½Þ¸Ä¸ï¿½rcvBuffPtr
 		packetLen = _tcpSession->OnParsePacket(rcvBuff);
 		if (packetLen == 0)
 			break;

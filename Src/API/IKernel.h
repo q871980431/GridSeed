@@ -82,23 +82,26 @@
 #ifdef LINUX
 #define DEBUG_LOG(format, a...)\
 {\
+		constexpr static const char * name = getFileName(__FILE__, sizeof(__FILE__) - 1);\
     	char log[LOG_BUFF_SIZE] = { 0 }; \
-        SafeSprintf(log, sizeof(log), "[DEBUG]: %s:%d:%s | "#format, __FILE__, __LINE__, __FUNCTION__, ##a); \
+        SafeSprintf(log, sizeof(log), "[DEBUG]: %s:%d:%s | "#format, name, __LINE__, __FUNCTION__, ##a); \
 	    core::G_KERNEL::g_kernel->AsyncLog(log);\
 }
 
 #define TRACE_LOG(format, a...)\
 {\
+	constexpr static const char * name = getFileName(__FILE__, sizeof(__FILE__) - 1);\
     char log[LOG_BUFF_SIZE] = { 0 }; \
-    SafeSprintf(log, sizeof(log), "[TRACE]: %s:%d:%s | "#format, __FILE__, __LINE__, __FUNCTION__, ##a); \
+    SafeSprintf(log, sizeof(log), "[TRACE]: %s:%d:%s | "#format, name, __LINE__, __FUNCTION__, ##a); \
     core::G_KERNEL::g_kernel->AsyncLog(log); \
 }
 
 
 #define ERROR_LOG(format, a...)\
 {\
+	constexpr static const char * name = getFileName(__FILE__, sizeof(__FILE__) - 1);\
 	char log[LOG_BUFF_SIZE] = { 0 }; \
-	SafeSprintf(log, sizeof(log), "[ERROR]: %s:%d:%s | "#format, __FILE__, __LINE__, __FUNCTION__, ##a); \
+	SafeSprintf(log, sizeof(log), "[ERROR]: %s:%d:%s | "#format, name, __LINE__, __FUNCTION__, ##a); \
 	core::G_KERNEL::g_kernel->AsyncLog(log); \
 }
 
@@ -152,16 +155,16 @@ namespace core
 	public:
 		const static s32 INIT_SEND_BUFF_SIZE = 1 * 1024;
 		const static s32 INIT_RECV_BUFF_SIZE = 1 * 1024;
-		const static s32 CLOSE_DELAY_TIME = 5;					//延迟关闭5S
+		const static s32 CLOSE_DELAY_TIME = 5;					//锟接迟关憋拷5S
 
-		virtual bool  IsPassiveConnection(void) = 0;			//是否是被动链接
+		virtual bool  IsPassiveConnection(void) = 0;			//锟角凤拷锟角憋拷锟斤拷锟斤拷锟斤拷
 		virtual void  Send(const char *buff, s32 len) = 0;      //
-		virtual void  Close(const char *reason) = 0;                              //关闭连接
+		virtual void  Close(const char *reason) = 0;                              //锟截憋拷锟斤拷锟斤拷
 		virtual const char * GetRemoteIP() = 0;
 		virtual s32   GetRemoteIpAddr() = 0;
-		virtual bool  SettingBuffSize(s32 recvSize, s32 sendSize) = 0;	//设置时 需保证无数据发送和接收, 可以在SetConnection时进行调用
+		virtual bool  SettingBuffSize(s32 recvSize, s32 sendSize) = 0;	//锟斤拷锟斤拷时 锟借保证锟斤拷锟斤拷锟捷凤拷锟酵和斤拷锟斤拷, 锟斤拷锟斤拷锟斤拷SetConnection时锟斤拷锟叫碉拷锟斤拷
 		virtual s32   GetSessionId() = 0;
-		virtual const char * GetCloseReason() = 0;				//获取关闭的原因, 不可能为nullptr
+		virtual const char * GetCloseReason() = 0;				//锟斤拷取锟截闭碉拷原锟斤拷, 锟斤拷锟斤拷锟斤拷为nullptr
 	};
 
 	class ITcpSession

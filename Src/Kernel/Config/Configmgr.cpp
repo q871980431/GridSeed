@@ -3,6 +3,13 @@
 #include "XmlReader.h"
 #include "../Kernel.h"
 
+namespace core
+{
+    static  const char *MODULE_PATH = "path";
+    static  const char *MODULE_NAME = "module";
+    static  const char *MODULE_NAME_ATTR = "name";
+}
+
 bool Configmgr::Ready()
 {
 

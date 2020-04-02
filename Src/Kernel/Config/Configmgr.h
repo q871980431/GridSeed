@@ -5,12 +5,6 @@
 #include "Singleton.h"
 #include "TString.h"
 
-namespace core
-{
-    static  const char *MODULE_PATH = "path";
-    static  const char *MODULE_NAME = "module";
-    static  const char *MODULE_NAME_ATTR = "name";
-}
 
 class Configmgr : public IConfigmgr
 {

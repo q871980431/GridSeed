@@ -21,11 +21,12 @@ IF(LINUX)
 	LINK_DIRECTORIES("${PROJECT_BINARY_DIR}/linux")
 	SET(CMAKE_C_FLAGS "-fPIC")
 	SET(CMAKE_CXX_FLAGS " -std=c++11 -Wall -Werror -Wno-error=unused-variable  -fexceptions -fnon-call-exceptions ")
-	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLINUX -pthread -rdynamic -ldl -lrt -g -Wl,-rpath,./ -Wl,-rpath-link,${PROJECT_BINARY_DIR}/linux/")
-	SET(CMAKE_C_FLAGS_DEBUG "-g -D_DEBUG -O -pg -L${PROJECT_SOURCE_DIR}/Thridlibrary/linux")
-	SET(CMAKE_C_FLAGS_RELWITHDEBINFO "-g -O2 _L${PROJECT_SOURCE_DIR}/Thridlibrary/linux")
-	SET(CMAKE_C_FLAGS_RELEASE "-O3 _L${PROJECT_SOURCE_DIR}/Thridlibrary/linux")
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLINUX -pthread -rdynamic -ldl -lrt -Wl,-rpath,./ -Wl,-rpath-link,${PROJECT_BINARY_DIR}/linux/")
+	SET(CMAKE_CXX_FLAGS_DEBUG "-D_DEBUG -g -O -pg -L${PROJECT_SOURCE_DIR}/Thridlibrary/linux/")
+	SET(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-g -O2 -L${PROJECT_SOURCE_DIR}/Thridlibrary/linux/")
+	SET(CMAKE_CXX_FLAGS_RELEASE "-O3 -L${PROJECT_SOURCE_DIR}/Thridlibrary/linux/")
 	MESSAGE(STATUS "Linux")
+	MESSAGE(STATUS "CMAKE_CXX_FLAGS"${CMAKE_CXX_FLAGS})
 ENDIF(LINUX)
 
 
@@ -53,13 +54,6 @@ SET(THIRD_LIBRARIES_DEBUG_DIR
 )
 SET(THIRD_LIBRARIES_RELEASE_DIR
 	"${PROJECT_SOURCE_DIR}/Thridlibrary/linux"
-)
-
-SET(OBJECT_LIBD
-	debug "${PROJECT_BINARY_DIR}/linux/libObjectMgr.so"
-)
-SET(OBJECT_LIB
-	optimized "${PROJECT_BINARY_DIR}/linux/libObjectMgr.so"
 )
 
 SET(KERNEL_LIBD

@@ -202,7 +202,7 @@ void NetListenerMgr::Run()
 		{
 			if (evt.opt == LISTEN_EVT_ADD)
 			{
-				//ÉÏ²ãÂß¼­±£»¤ ²»»áÓÐ³¬¹ýLISTEN_SOCKET_SIZE ÊýÁ¿
+				//ï¿½Ï²ï¿½ï¿½ß¼ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ð³ï¿½ï¿½ï¿½LISTEN_SOCKET_SIZE ï¿½ï¿½ï¿½ï¿½
 				if (netSockets.size < LISTEN_SOCKET_SIZE)
 				{
 					SocketNode *node = &(netSockets.sockets[netSockets.size++]);

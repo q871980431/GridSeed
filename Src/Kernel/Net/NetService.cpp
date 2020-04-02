@@ -78,7 +78,7 @@ void NetService::OnAcceptSocket(IKernel *kernel, NetSocket clientSocket, ITcpSes
 
 void NetService::OnConnectedSocket(IKernel *kernel, NetSocket connectSocket, sockaddr_in &addr, ITcpSession *session)
 {
-	TRACE_LOG("On Connect Target Ip£º%s, Port:%d, Socket:%d", tools::GetSocketIp(addr), tools::GetSocketPort(addr), connectSocket);
+	TRACE_LOG("On Connect Target Ip:%s, Port:%d, Socket:%d", tools::GetSocketIp(addr), tools::GetSocketPort(addr), connectSocket);
 	CreateConnection(GetSessionId(), false, connectSocket, session);
 }
 
