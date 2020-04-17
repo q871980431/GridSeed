@@ -66,6 +66,15 @@ class AsyncThread {
 		AsyncBaseLinkChain work;
 		std::mutex lock;
 	};
+public:
+	struct Status
+	{
+		s32 ququeId;
+		s32 addCount;
+		s32 execCount;
+		s32 completeCount;
+		s32 releaseCount;
+	};
 
 public:
 	AsyncThread(s32 ququeId, s32 threadIdx);
@@ -75,7 +84,8 @@ public:
 	void Terminate();
 	void Add(AsyncBase * base);
 	void Loop(s64 overtime);
-
+	
+	inline const Status &GetStatus() const { return _status; };
 private:
 	void ThreadProc();
 
@@ -89,6 +99,7 @@ private:
 	std::thread _thread;
 	AsyncBaseThreadData _readyExec;
 	AsyncBaseThreadData _complete;
+	Status	_status;
 };
 
 #endif //__ASYNCTHREAD_H__

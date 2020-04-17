@@ -1,11 +1,13 @@
 #ifndef  __Modulemgr_h__
 #define  __Modulemgr_h__
 
+#include "../Kernel.h"
 #include "IModulemgr.h"
 #include "Singleton.h"
 #include "TString.h"
 #include "Tools.h"
 #include <unordered_map>
+
 namespace core
 {
     //static  const char *MODULE_PATH = "path";

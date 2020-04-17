@@ -35,6 +35,8 @@ public:
 	virtual void StopAsync(core::IAsyncHandler * handler);
 	virtual core::IAsyncQueue * GetMainAsyncQueue();
 	virtual core::IAsyncQueue * CreateAsyncQueue(const s32 threadSize, const char *trace);
+	virtual void AddModuleProfile(core::IModuleProfile *moduleProfile);
+
     virtual const char* GetCoreFile();
     virtual const char* GetConfigFile();
     virtual const  char* GetEnvirPath();
@@ -53,6 +55,7 @@ private:
 	std::unordered_map<s32, AsyncQueue*>	    _asyncQueues;
 	std::string									_procName;
 	s32											_frameNum;
+	bool										_openLoadInfo;
 };
 
 #define KERNEL ((Kernel * )(Kernel::GetInstancePtr()))

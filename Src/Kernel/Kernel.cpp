@@ -27,6 +27,7 @@ bool Kernel::Ready()
 	_asyncQueueId = 1;
 	_mainQueue = nullptr;
 	_frameNum = FRAME_NUM_UNLIMIT;
+	_openLoadInfo = false;
 	G_KERNEL::g_kernel = this;
 	G_KERNEL::g_logLvl = LOG_LEVEL_DEBUG;
     return _logger.Ready()&&
@@ -53,6 +54,10 @@ bool Kernel::Initialize(s32 argc, char **argv)
 			_frameNum = iNum;
 		}
 	}
+	const char *loadInfo = GetCmdArg("load_info");
+	if (loadInfo != nullptr)
+		_openLoadInfo = (std::atoi(loadInfo) != 0) ? true : false;
+
 	_procName.append(name);
 	_procName.push_back(ProcessNameSplit);
 	_procName.append(id);
@@ -116,7 +121,7 @@ void Kernel::Loop()
 			for (auto &asyncQueue : _asyncQueues)
 				asyncQueue.second->Loop(execTime);
 		}
-		TRACE_LOG_STOP_WATCH(stopWatch, 0, "async queue");
+		TRACE_LOG_STOP_WATCH(stopWatch, MODULE_EXPENDS_TIME, "async queue");
 		NetService::GetInstance()->Process(this, MODULE_EXPENDS_TIME);
 		TRACE_LOG_STOP_WATCH(stopWatch, MODULE_EXPENDS_TIME, "net service");
 		TimerMgr::GetInstance()->Process(MODULE_EXPENDS_TIME);
@@ -132,7 +137,11 @@ void Kernel::Loop()
 		s64 interval = loadWatch.Interval();
 		if (loadWatch.Interval() > KERNEL_LOAD_PRF_TIME)
 		{
-			TRACE_LOG("runtime:%ld ms, cpu time:%d ms, load val:%.2f%%", interval, iCpuTime, (iCpuTime * 100.f) / interval);
+			if (_openLoadInfo)
+			{
+				TRACE_LOG("runtime:%ld ms, cpu time:%d ms, load val:%.2f%%", interval, iCpuTime, (iCpuTime * 100.f) / interval);
+			}
+
 			loadWatch.Reset();
 			iCpuTime = 0;
 		}
@@ -253,12 +262,19 @@ core::IAsyncQueue * Kernel::CreateAsyncQueue(const s32 threadSize, const char *t
 	return CreateAsyncQueue(GetNewQueueId(), threadSize, trace);
 }
 
+void Kernel::AddModuleProfile(core::IModuleProfile *moduleProfile)
+{
+	if (moduleProfile)
+	{
+		PROFILEMGR.AddModuleProfile(moduleProfile);
+	}
+}
 AsyncQueue * Kernel::CreateAsyncQueue(s32 queueId, const s32 threadSize, const char *trace)
 {
 	IKernel *kernel = this;
 
 	AsyncQueue *queue = NEW AsyncQueue(queueId, trace);
-	if (!queue->Initialize(threadSize))
+	if (!queue->Ready()|| !queue->Initialize(threadSize))
 	{
 		DEL queue;
 		return nullptr;

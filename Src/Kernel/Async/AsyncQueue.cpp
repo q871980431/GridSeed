@@ -4,6 +4,7 @@
 #include "AsyncThread.h"
 
 bool AsyncQueue::Ready() {
+	KERNEL->AddModuleProfile(this);
     return true;
 }
 
@@ -53,4 +54,22 @@ void AsyncQueue::GetQueueInfo(s32 &threadNum, std::set<s32> &threadIds)
 	threadNum = _threads.size();
 	for (s32 i = 0; i < threadNum; i++)
 		threadIds.insert(i);
+}
+
+const char * AsyncQueue::Name()
+{
+	return _moduleName.c_str();
+}
+
+std::string AsyncQueue::ProfileInfo()
+{
+	std::string profile;
+	for (const AsyncThread * t : _threads) {
+		const auto &status = t->GetStatus();
+		char buff[255];
+		const char *profileFormate = "thread idx:%d add count:%d, exec count:%d, complete count:%d, release count:%d \n";
+		SafeSprintf(buff, sizeof(buff), profileFormate, status.ququeId, status.addCount, status.execCount, status.completeCount, status.releaseCount);
+		profile.append(buff);
+	}
+	return profile;
 }

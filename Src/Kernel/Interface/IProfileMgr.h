@@ -8,5 +8,6 @@ class IProfileMgr    : public core::ICore
 {
 public:
 	virtual void Process(s32 tick) = 0;
+	virtual void AddModuleProfile(core::IModuleProfile *moduleProfile) = 0;
 };
 #endif

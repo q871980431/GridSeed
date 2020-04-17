@@ -6,7 +6,7 @@
 #include <mutex>
 
 
-AsyncThread::AsyncThread(s32 ququeId, s32 threadIdx) :_terminate(false), _queueId(ququeId),  _threadIdx(threadIdx) {
+AsyncThread::AsyncThread(s32 ququeId, s32 threadIdx) :_terminate(false),  _threadIdx(threadIdx) {
 
 	tools::Zero(_readyExec.main);
 	tools::Zero(_readyExec.swap);
@@ -14,6 +14,8 @@ AsyncThread::AsyncThread(s32 ququeId, s32 threadIdx) :_terminate(false), _queueI
 	tools::Zero(_complete.main);
 	tools::Zero(_complete.swap);
 	tools::Zero(_complete.work);
+	tools::Zero(_status);
+	_status.ququeId = ququeId;
 }
 
 void AsyncThread::Start() {
@@ -51,21 +53,25 @@ void AsyncThread::Loop(s64 overtime) {
 void AsyncThread::ThreadProc() {
 	while (!_terminate) {
 		AsyncBase * base = tlib::linear::PopHead<AsyncBaseLinkChain, AsyncBase>(_readyExec.work);
-		if (!base) {
-			tlib::linear::MergeListByLock(_readyExec.work, _readyExec.swap, _readyExec.lock);
-			base = tlib::linear::PopHead<AsyncBaseLinkChain, AsyncBase>(_readyExec.work);
-		}
+		do 
+		{
+			if (!base) {
+				tlib::linear::MergeListByLock(_readyExec.work, _readyExec.swap, _readyExec.lock);
+				base = tlib::linear::PopHead<AsyncBaseLinkChain, AsyncBase>(_readyExec.work);
+			}
 
-		if (base) {
-			TRY_BEGIN
-			base->OnExecute(_queueId, _threadIdx);
-			TRY_END
-			tlib::linear::PushTail(_complete.work, base);
-			if (_complete.swap.head == nullptr)
-				tlib::linear::MergeListByLock(_complete.swap, _complete.work, _complete.lock);
-		}
-		else {
-			MSLEEP(1);
-		}
+			if (base) {
+				TRY_BEGIN
+					base->OnExecute(_queueId, _threadIdx);
+				TRY_END
+					tlib::linear::PushTail(_complete.work, base);
+				base = tlib::linear::PopHead<AsyncBaseLinkChain, AsyncBase>(_readyExec.work);
+			}
+		} while (base);
+
+		if (_complete.swap.head == nullptr)
+			tlib::linear::MergeListByLock(_complete.swap, _complete.work, _complete.lock);
+		else
+			MSLEEP(10);
 	}
 }

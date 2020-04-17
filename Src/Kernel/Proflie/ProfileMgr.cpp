@@ -1,6 +1,5 @@
 #include "ProfileMgr.h"
 #include "XmlReader.h"
-#include "../Kernel.h"
 #include "Tools_time.h"
 #include "gperftools/profiler.h"
 #include "gperftools/heap-profiler.h"
@@ -53,7 +52,6 @@ bool ProfileMgr::Destroy()
 
 void ProfileMgr::Process(s32 tick)
 {
-#ifdef LINUX
 	s64 now = tools::GetTimeMillisecond();
 	if (_config.lastCheckTime == 0)
 	{
@@ -61,6 +59,16 @@ void ProfileMgr::Process(s32 tick)
 	}
 	if (now - _config.lastCheckTime > _config.checkTime)
 	{
+		TRACE_LOG("****************ProfileInfo****************");
+		if (_config.openProfile)
+		{
+			for (auto & iter : _moduleProfiles)
+			{
+				TRACE_LOG("%s: %s", iter->Name(), iter->ProfileInfo().c_str());
+			}
+		}
+#ifdef LINUX
+
 		ECHO("************Enter Profiler Flush************");
 		if (_config.openCpuInfo)
 		{
@@ -70,9 +78,9 @@ void ProfileMgr::Process(s32 tick)
 		{
 			HeapProfilerDump("loop dump");
 		}
+#endif
 		_config.lastCheckTime = now;
 	}
-#endif
 }
 
 bool ProfileMgr::_LoadConfig()
@@ -91,6 +99,7 @@ bool ProfileMgr::_LoadConfig()
 		_config.openCpuInfo = profile->GetAttribute_Bool("cpu_check");
 		_config.openMemInfo = profile->GetAttribute_Bool("mem_check");
 		_config.checkTime = profile->GetAttribute_S32("check_time") * tools::MILLISECONDS;
+		_config.openProfile = profile->GetAttribute_Bool("open_prof");
 	}
 
 	return true;

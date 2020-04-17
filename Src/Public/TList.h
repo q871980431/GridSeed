@@ -200,6 +200,7 @@ namespace tlib
 				ASSERT(list.tail == nullptr, "wtf");
 				list.head = node;
 				list.tail = node;
+				node->next = nullptr;
 			}
 			else {
 				ASSERT(list.tail != nullptr, "wtf");
@@ -221,6 +222,7 @@ namespace tlib
 				list.tail->next = node;
 				list.tail = node;
 			}
+			node->next = nullptr;
 		}
 
 		template<typename L>

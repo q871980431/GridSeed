@@ -1,7 +1,6 @@
 #include "Modulemgr.h"
 #include "Tools.h"
 #include "XmlReader.h"
-#include "../Kernel.h"
 #include "Configmgr.h"
 
 IKernel * Modulemgr::s_kernel = nullptr;
