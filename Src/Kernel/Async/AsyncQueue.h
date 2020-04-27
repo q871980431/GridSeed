@@ -11,8 +11,9 @@ class AsyncQueue : public IAsyncQueue, public IModuleProfile {
 public:
 	AsyncQueue(s32 queueId, const char *trace) :_trace(trace), _queueId(queueId), _moduleName("AsyncQueue") {
 		_moduleName.push_back('_');
-		_moduleName.append(trace);
 		_moduleName.append(std::to_string(_queueId));
+		_moduleName.push_back('_');
+		_moduleName.append(trace);
 	};
 
     bool Ready();

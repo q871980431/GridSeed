@@ -78,7 +78,7 @@ bool Kernel::Initialize(s32 argc, char **argv)
 			s32 threadCount = async->GetAttribute_S32("threadcount");
 			if (threadCount > 0)
 			{
-				_mainQueue =  CreateAsyncQueue(0, threadCount, "config.xml");
+				_mainQueue =  CreateAsyncQueue(0, threadCount, "kernel");
 				if (_mainQueue == nullptr)
 					return false;
 			}

@@ -28,6 +28,7 @@ void AsyncThread::Terminate() {
 }
 
 void AsyncThread::Add(AsyncBase * base) {
+	_status.addCount++;
 	tlib::linear::PushTail(_readyExec.main, base);
 }
 
@@ -39,9 +40,11 @@ void AsyncThread::Loop(s64 overtime) {
 	while (base)
 	{
 		TRY_BEGIN
+		_status.completeCount++;
 		base->OnComplete();
 		TRY_END
 		TRY_BEGIN
+		_status.releaseCount++;
 		base->Release();
 		TRY_END
 		if (tools::GetTimeMillisecond() - tick >= overtime)
@@ -62,6 +65,7 @@ void AsyncThread::ThreadProc() {
 
 			if (base) {
 				TRY_BEGIN
+					_status.execCount++;
 					base->OnExecute(_queueId, _threadIdx);
 				TRY_END
 					tlib::linear::PushTail(_complete.work, base);
@@ -69,7 +73,7 @@ void AsyncThread::ThreadProc() {
 			}
 		} while (base);
 
-		if (_complete.swap.head == nullptr)
+		if (_complete.swap.head == nullptr && _complete.work.head != nullptr)
 			tlib::linear::MergeListByLock(_complete.swap, _complete.work, _complete.lock);
 		else
 			MSLEEP(10);
