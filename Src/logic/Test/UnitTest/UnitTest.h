@@ -10,6 +10,9 @@
 #include "IUnitTest.h"
 #include <vector>
 
+#define UNITTEST_LOG(content) LABEL_LOG(core::LOG_LEVEL_DEBUG, "LUA", content)
+
+
 typedef std::vector<IUnitTestInstance *> TestList;
 class UnitTest : public IUnitTest
 {
@@ -33,10 +36,10 @@ struct UnitTestRegister
 {
 	UnitTestRegister()
 	{
-		printf("this UnitTest Register 1\n");
+		//printf("this UnitTest Register 1\n");
 		TestList &list = UnitTest::GetTestList();
 		list.push_back(NEW T());
-		printf("list size:%ld", list.size());
+		//printf("list size:%ld", list.size());
 	}
 };
 #endif

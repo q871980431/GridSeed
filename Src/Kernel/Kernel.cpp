@@ -15,6 +15,9 @@
 template<> Kernel * Singleton<Kernel>::_instance = nullptr;
 core::IKernel * G_KERNEL::g_kernel = nullptr;
 s32 G_KERNEL::g_logLvl = 0;
+#ifdef WIN32
+HANDLE G_KERNEL::g_stdHandle;
+#endif
 
 const char ProcessNameSplit = '_';
 const s32 FRAME_NUM_UNLIMIT = -1;
@@ -30,6 +33,7 @@ bool Kernel::Ready()
 	_openLoadInfo = false;
 	G_KERNEL::g_kernel = this;
 	G_KERNEL::g_logLvl = LOG_LEVEL_DEBUG;
+	G_KERNEL::g_stdHandle = GetStdHandle(STD_OUTPUT_HANDLE);
     return _logger.Ready()&&
            Configmgr::GetInstance()->Ready()&&
            NetService::GetInstance()->Ready()&&
@@ -153,8 +157,12 @@ void Kernel::Destroy()
 	NetService::GetInstance()->Destroy();
     Modulemgr::GetInstance()->Destroy();
     Configmgr::GetInstance()->Destroy();
-    _logger.Destroy(); 
+	AsyncLog("================server shutdown============================");
+	SyncLog("=================server shutdown============================");
+    _logger.Destroy();
+	MSLEEP(1000);
 }
+
 const char * Kernel::GetCmdArg(const char *name)
 {
     auto iter = _cmdArgs.find(name);

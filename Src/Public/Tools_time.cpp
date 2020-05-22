@@ -98,6 +98,27 @@ extern "C"  {
         return (time->tm_wday + day - 1) / 7 + 1;
     }
 
+	u64 Rdtsc()
+	{
+		#if defined(LINUX)
+		#   if defined(__i386__)
+				uint64_t x;
+				__asm__ volatile (".byte 0x0f, 0x31" : "=A" (x));
+				return x;
+		#   elif defined(__x86_64__)
+				uint32_t hi, lo;
+				__asm__ __volatile__("rdtsc" : "=a"(lo), "=d"(hi));
+				return ((uint64_t)lo) | ((uint64_t)hi << 32);
+		#   else
+		#       error Unsupported architecture.
+		#   endif
+		#elif defined(_MSC_VER)
+				return __rdtsc();
+		#else
+		#   error Other compilers not supported...
+		#endif
+	}
+
 //===================================END======================================
 #ifdef __cplusplus
 }

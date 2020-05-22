@@ -7,10 +7,10 @@
 const static UnitTestRegister<TimerTest> test;
 void TimerTest::StartTest(core::IKernel *kernel)
 {
-	return;
 	static const s32 timerCount = 20000;
 	static SimpleTimer *timers[timerCount];
 
+	UNITTEST_LOG("Unit test log");
 	TRACE_LOG("Enter Start Test");
 	for (s32 i = 0; i < timerCount; i++)
 	{

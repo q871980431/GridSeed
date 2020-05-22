@@ -19,7 +19,7 @@ LONG _stdcall CDumper::snUnhandledExceptionFilter(PEXCEPTION_POINTERS pException
 	CDumper::CreateMiniDump(pExceptionInfo);
 
 	wchar_t msg[512];
-	wsprintfW(msg, L"Exception happened. Exception code is xuxinyu test");
+	wsprintfW(msg, L"Exception happened.");
 	MessageBoxW(NULL, msg, L"Exception", MB_OK); //显示消息给用户
 
 

@@ -49,6 +49,7 @@ namespace tools
         bool UpdateLocalTime(time_t time);
         time_t GetYearTime(s32 year, s32 month, s32 day, s32 hour, s32 min);
         s32 GetGameWeek(time_t tick);
+		u64 Rdtsc();
 #ifdef __cplusplus
     }
 #endif

@@ -41,7 +41,7 @@ public:
     virtual const char* GetConfigFile();
     virtual const  char* GetEnvirPath();
 	virtual const char * GetProcName() { return _procName.c_str(); };
-
+	virtual void ShutDown() { Destroy(); };
 protected:
 private:
     void ParseCommand(s32 argc, char **argv);
