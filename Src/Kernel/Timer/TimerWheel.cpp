@@ -76,9 +76,9 @@ void TimerWheel::AddTimer(TimerBase *timer, s64 delay)
 
 void TimerWheel::Process(core::IKernel *kernel, s32 tick)
 {
-	s64 now = tools::GetTimeMillisecond();
-
-	auto jiffies = GetJiffies(now);
+	s64 targetTime = tools::GetTimeMillisecond();
+	s64 now = targetTime;
+	auto jiffies = GetJiffies(targetTime);
 	while (jiffies > _jiffies)
 	{
 		LinkList workList;
@@ -97,6 +97,9 @@ void TimerWheel::Process(core::IKernel *kernel, s32 tick)
 			((TimerBase *)tmp)->Exec(kernel, now);
 			tmp = workList.HeadRemove();
 		}
+		now = tools::GetTimeMillisecond();
+		if (now - targetTime > tick)
+			break;
 	}
 }
 

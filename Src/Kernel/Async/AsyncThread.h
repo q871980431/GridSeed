@@ -69,7 +69,8 @@ class AsyncThread {
 public:
 	struct Status
 	{
-		s32 ququeId;
+		s32 queueId;
+		s32 threadIdx;
 		s32 addCount;
 		s32 execCount;
 		s32 completeCount;
@@ -94,8 +95,6 @@ private:
 
 private:
 	bool _terminate;
-	s32  _queueId;
-	s32  _threadIdx;
 	std::thread _thread;
 	AsyncBaseThreadData _readyExec;
 	AsyncBaseThreadData _complete;

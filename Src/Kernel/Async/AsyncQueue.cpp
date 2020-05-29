@@ -12,7 +12,7 @@ bool AsyncQueue::Initialize(s32 threadCount)
 {
 	if (threadCount > 0) {
 		for (s32 i = 0; i < threadCount; ++i) {
-			AsyncThread * t = NEW AsyncThread(_queueId, i);
+			AsyncThread * t = NEW AsyncThread(_queueId, i+1);
 			t->Start();
 			_threads.push_back(t);
 		}
@@ -41,7 +41,8 @@ void AsyncQueue::StartAsync(const s64 threadId, IAsyncHandler * handler, const c
 	ASSERT(!handler->GetBase(), "wtf");
 	ASSERT(_threads.size() > 0, "wtf");
 	AsyncBase * base = NEW AsyncBase(handler, file, line);
-	_threads[((u64)threadId) % _threads.size()]->Add(base);
+	u64 tmpThreadId = (u64)threadId - 1;
+	_threads[tmpThreadId % _threads.size()]->Add(base);
 }
 
 void AsyncQueue::StopAsync(IAsyncHandler * handler) {
@@ -53,7 +54,7 @@ void AsyncQueue::GetQueueInfo(s32 &threadNum, std::set<s32> &threadIds)
 {
 	threadNum = _threads.size();
 	for (s32 i = 0; i < threadNum; i++)
-		threadIds.insert(i);
+		threadIds.insert(i+1);
 }
 
 const char * AsyncQueue::Name()
@@ -68,7 +69,7 @@ std::string AsyncQueue::ProfileInfo()
 		const auto &status = t->GetStatus();
 		char buff[255];
 		const char *profileFormate = "thread idx:%d add count:%d, exec count:%d, complete count:%d, release count:%d \n";
-		SafeSprintf(buff, sizeof(buff), profileFormate, status.ququeId, status.addCount, status.execCount, status.completeCount, status.releaseCount);
+		SafeSprintf(buff, sizeof(buff), profileFormate, status.threadIdx, status.addCount, status.execCount, status.completeCount, status.releaseCount);
 		profile.append(buff);
 	}
 	return profile;

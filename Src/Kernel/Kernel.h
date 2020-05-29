@@ -1,4 +1,4 @@
-#ifndef __Kernel_h__
+﻿#ifndef __Kernel_h__
 #define __Kernel_h__
 #include "Singleton.h"
 #define KERNEL_EXPORT
@@ -21,8 +21,8 @@ public:
 
 public:
     virtual void SyncLog(const char *contens);
-    virtual void AsyncLog(const char *contens);
-	virtual void ThreadLog(const char *contents);
+	virtual void AsyncLog(const char *fileName, const char *content);
+	virtual void ThreadLog(const char *fileName, const char *contents);
 	virtual s32  GetLogLevel();
     virtual IModule * FindModule(const char *name);
     virtual void CreateNetSession(const char *ip, s16 port, core::ITcpSession *session);

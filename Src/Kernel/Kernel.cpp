@@ -33,9 +33,11 @@ bool Kernel::Ready()
 	_openLoadInfo = false;
 	G_KERNEL::g_kernel = this;
 	G_KERNEL::g_logLvl = LOG_LEVEL_DEBUG;
+#ifdef WIN32
 	G_KERNEL::g_stdHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-    return _logger.Ready()&&
-           Configmgr::GetInstance()->Ready()&&
+#endif
+    return Configmgr::GetInstance()->Ready() && 
+		   _logger.Ready()&&
            NetService::GetInstance()->Ready()&&
 		   TimerMgr::GetInstance()->Ready() && PROFILEMGR.Ready();
 }
@@ -66,7 +68,7 @@ bool Kernel::Initialize(s32 argc, char **argv)
 	_procName.push_back(ProcessNameSplit);
 	_procName.append(id);
 
-	bool temp = _logger.Initialize() && Configmgr::GetInstance()->Initialize();
+	bool temp = Configmgr::GetInstance()->Initialize() && _logger.Initialize();
 	if (temp)
 	{
 		const char *configPath = GetConfigFile();
@@ -100,7 +102,7 @@ bool Kernel::Initialize(s32 argc, char **argv)
 {\
 	int64_t costTime = stopWatch.Interval();\
 	if (costTime > (Time))\
-		TRACE_LOG("%s expends time:%ld", Content, costTime);\
+		IMPORTANT_LOG("RUNTIME", "%s expends time:%ld", Content, costTime);\
 	stopWatch.Reset();\
 }
 
@@ -157,7 +159,7 @@ void Kernel::Destroy()
 	NetService::GetInstance()->Destroy();
     Modulemgr::GetInstance()->Destroy();
     Configmgr::GetInstance()->Destroy();
-	AsyncLog("================server shutdown============================");
+	AsyncLog(nullptr, "================server shutdown============================");
 	SyncLog("=================server shutdown============================");
     _logger.Destroy();
 	MSLEEP(1000);
@@ -193,18 +195,18 @@ void Kernel::ParseCommand(s32 argc, char **argv)
         }
     }
 }
-void Kernel::AsyncLog(const char *contens)
+void Kernel::AsyncLog(const char *fileName, const char *content)
 {
-    _logger.AsyncLog(contens);
+    _logger.AsyncLog(fileName, content);
 }
 void Kernel::SyncLog(const char *contens)
 {
     _logger.SyncLog(contens);
 }
 
-void Kernel::ThreadLog(const char *contents)
+void Kernel::ThreadLog(const char *fileName, const char *contents)
 {
-	_logger.ThreadLog(contents);
+	_logger.ThreadLog(fileName, contents);
 }
 
 s32 Kernel::GetLogLevel()

@@ -64,6 +64,16 @@ namespace tools
 	private:
 		int64_t _tick;
 	};
+
+	class RtsWatch
+	{
+	public:
+		RtsWatch(){}
+		inline void Reset() { _tick = Rdtsc(); };
+		inline s64 Interval() { return Rdtsc() - _tick; };
+	private:
+		int64_t _tick;
+	};
 }
 
 #endif

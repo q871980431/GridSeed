@@ -6,7 +6,7 @@
 #include <mutex>
 
 
-AsyncThread::AsyncThread(s32 ququeId, s32 threadIdx) :_terminate(false),  _threadIdx(threadIdx) {
+AsyncThread::AsyncThread(s32 ququeId, s32 threadIdx) :_terminate(false) {
 
 	tools::Zero(_readyExec.main);
 	tools::Zero(_readyExec.swap);
@@ -15,7 +15,9 @@ AsyncThread::AsyncThread(s32 ququeId, s32 threadIdx) :_terminate(false),  _threa
 	tools::Zero(_complete.swap);
 	tools::Zero(_complete.work);
 	tools::Zero(_status);
-	_status.ququeId = ququeId;
+
+	_status.queueId = ququeId;
+	_status.threadIdx = threadIdx;
 }
 
 void AsyncThread::Start() {
@@ -66,7 +68,7 @@ void AsyncThread::ThreadProc() {
 			if (base) {
 				TRY_BEGIN
 					_status.execCount++;
-					base->OnExecute(_queueId, _threadIdx);
+					base->OnExecute(_status.queueId, _status.threadIdx);
 				TRY_END
 					tlib::linear::PushTail(_complete.work, base);
 				base = tlib::linear::PopHead<AsyncBaseLinkChain, AsyncBase>(_readyExec.work);

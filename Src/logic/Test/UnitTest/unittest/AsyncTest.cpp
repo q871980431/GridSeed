@@ -6,7 +6,7 @@ UnitTestRegister<AsyncTest> test;
 void AsyncTest::StartTest(core::IKernel *kernel)
 {
 	TestKernelAsync(kernel);
-	//TestAsyncQueue(kernel);
+	TestAsyncQueue(kernel);
 }
 
 void AsyncTest::TestKernelAsync(core::IKernel *kernel)
@@ -41,10 +41,10 @@ void AsyncTest::TestAsyncQueue(core::IKernel *kernel)
 	core::IAsyncQueue *queue = kernel->CreateAsyncQueue(2, __FUNCTION__);
 	if (queue)
 	{
-		for (s32 i = 0; i < 10; i++)
+		for (s32 i = 0; i < 100; i++)
 		{
 			auto asyncExecFun = [i](core::IKernel *kernel, s32 queueId, s32 threadIdx)->bool
-			{
+			{				
 				THREAD_LOG("TestAsyncQueue", "Simple Task[%d], Async Exec fun, queueId:%d, theadIdx:%d", i, queueId, threadIdx);
 				if (i % 2 == 0)
 					return false;

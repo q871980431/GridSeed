@@ -4,24 +4,15 @@
 #include "Singleton.h"
 #include "ILogger.h"
 #include "LogFile.h"
-#include "TString.h"
 #include "CircularQueue.h"
 #include <thread>
 #include <mutex>
 #include <list>
+#include <map>
 
-#define LOG_FILE_ATT    ".log"
-#define LOG_CONNECT_SIGN "_"
 
 class Logger   : public ILogger, public Singleton<Logger>
 {
-    struct LogNode 
-    {
-        tlib::TString<64> _time;
-        tlib::TString<LOG_BUFF_SIZE> _contents;
-        LogNode() :_time(), _contents(){};
-        LogNode(const char *time, const char *contents) :_time(time), _contents(contents){};
-    };
 	enum
 	{
 		LOG_NODE_COUNT = 1024,
@@ -32,6 +23,13 @@ class Logger   : public ILogger, public Singleton<Logger>
 		SLEEP_TIME = 100,
     };
 
+	struct LogConfig 
+	{
+		std::string path;
+		s32 splitSize;
+		s32 splitTime;
+	};
+
 	typedef std::list<LogNode*> LogList;
 	struct LogListThreadData
 	{
@@ -41,46 +39,58 @@ class Logger   : public ILogger, public Singleton<Logger>
 		std::mutex	mutex;
 	};
 
-public:
-    //virtual ~Logger(){};
+	struct LogChannelInfo 
+	{
+		LogList threadA;
+		LogList threadB;
+		LogList	swap;
+		std::mutex	mutex;
+		std::map<std::string, LogFile *> logMap;
+		LogFile *mainLog;
+		std::string suffixName;
+		s64 flushTime{0};
+	};
 
+
+public:
     virtual bool Ready();
     virtual bool Initialize();
     virtual bool Destroy();
 
     virtual void SyncLog(const char *contents);
-    virtual void AsyncLog(const char *contents);
-	virtual void ThreadLog(const char *contents);
+    virtual void AsyncLog(const char *fileName, const char *content);
+	virtual void ThreadLog(const char *fileName, const char *content);
 	virtual void Process(s32 tick);
 
-	s32	LogLevel() { return _logLevel; };
+public:
+	inline s32	LogLevel() { return _logLevel; };
+
 private:
     void ThreadRun();
 
 private:
+	bool LoadConfig();
+	void InitLogChannel(LogChannelInfo &channelInfo, const std::string &suffixName, s64 nowTime);
 	const char *GetLogTimeString();
 	bool CreateLogFile(LogFile &logFile);
 	bool WriteLogNode(LogFile &logFile, const LogNode *logNode);
+	void OnCheckChannel(s64 nowTime, LogChannelInfo &channelInfo);
+	bool DealLogChannelInfo(s64 nowTime, LogChannelInfo &channelInfo);
+	void DealChannleLog(s64 nowTime, LogChannelInfo &channelInfo, const LogNode *logNode);
 
 private:
 
-    tlib::TString<MAX_PATH>         _logPath;
-    tlib::TString<LOG_PREFIX_LEN>   _asyncPrefix;
-    tlib::TString<LOG_PREFIX_LEN>   _syncPrefix;
-    LogFile _asyncFile;
-	LogFile _asyncThreadFile;		
-    LogFile _syncFile;
+    tlib::TString<MAX_PATH>				_logPath;
+	tlib::TString<MAX_PATH>				_logPrefix;
+	LogConfig							_logConfig;
+	LogFile								_syncFile{"", "sync"};
 
     std::thread                         _thread;
     bool                                _terminate;
-	std::string							_procName;
-	std::string							_procId;
-
-	LogListThreadData					_write;
-	LogListThreadData					_dels;
-	LogListThreadData					_threadLog;
+	LogChannelInfo						_asyncChannel;
+	LogChannelInfo						_threadChannel;
 	std::mutex							_threadLogMutex;
-	s32	_logLevel;
+	s32									_logLevel;
 };
 
 #define LOGGER  (Logger::GetInstancePtr())

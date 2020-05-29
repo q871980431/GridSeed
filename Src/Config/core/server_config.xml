@@ -1,6 +1,9 @@
 <root>
 	<env path="./envir"></env>
+	<!--path相对于执行路径 split_size 自动分片的大小单位M split_time自动分片时间 单位H-->
+	<log path="./log" split_size="2000" split_time="2"/>
 	<net no_delay="true" rev_buff="65536" send_buff="65536"></net>
+	
 	<cluster master_ip="127.0.0.1" port="8001" >
 		<node name="gate" type="1"/>
 		<node name="logic" type="2"/>

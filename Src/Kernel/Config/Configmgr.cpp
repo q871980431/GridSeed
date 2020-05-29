@@ -12,13 +12,12 @@ namespace core
 
 bool Configmgr::Ready()
 {
-
-    return true;
+	return true;
 }
 
 bool Configmgr::Initialize()
 {
-    return LoadCoreConfig() && LoadModuleConfig();
+	return LoadCoreConfig() && LoadModuleConfig();
 }
 
 bool Configmgr::Destroy()
