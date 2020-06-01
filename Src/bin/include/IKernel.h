@@ -20,14 +20,7 @@
 }
 
 #define FOREVER	-1
-
-
-#define LUA_LOG(content)\
-{\
-    char log[LOG_BUFF_SIZE] = { 0 }; \
-    SafeSprintf(log, sizeof(log), "[LUA]: %s", (content)); \
-    core::G_KERNEL::g_kernel->AsyncLog(log);\
-}
+#define MAIN_THREAD_IDX 0
 
 #ifdef WIN32
 #define DEBUG_LOG(format, ...)\
@@ -37,7 +30,8 @@
 		constexpr static const char * name = getFileName(__FILE__, sizeof(__FILE__) - 1);\
 		char log[LOG_BUFF_SIZE] = { 0 }; \
 		SafeSprintf(log, sizeof(log), "[DEBUG]: %s:%d:%s | "#format, name, __LINE__, __FUNCTION__, ##__VA_ARGS__); \
-		core::G_KERNEL::g_kernel->AsyncLog(log);\
+		PrintToConsel(core::G_KERNEL::g_stdHandle, 0x08, log);\
+		core::G_KERNEL::g_kernel->AsyncLog(nullptr, log);\
 	}\
 }
 
@@ -48,75 +42,143 @@
 		constexpr static const char * name = getFileName(__FILE__, sizeof(__FILE__) - 1);\
 		char log[LOG_BUFF_SIZE] = { 0 }; \
 		SafeSprintf(log, sizeof(log), "[TRACE]: %s:%d:%s | "#format, name, __LINE__, __FUNCTION__, ##__VA_ARGS__); \
-		printf("%s\n", log);\
-		core::G_KERNEL::g_kernel->AsyncLog(log); \
+		PrintToConsel(core::G_KERNEL::g_stdHandle, 0x06, log);\
+		core::G_KERNEL::g_kernel->AsyncLog(nullptr, log); \
+	}\
+}
+
+#define WARN_LOG(format, ...)\
+{\
+	if(  core::LOG_LEVEL_WARN >= core::G_KERNEL::g_logLvl)\
+	{\
+		constexpr static const char * name = getFileName(__FILE__, sizeof(__FILE__) - 1);\
+		char log[LOG_BUFF_SIZE] = { 0 }; \
+		SafeSprintf(log, sizeof(log), "[WARN]: %s:%d:%s | "#format, name, __LINE__, __FUNCTION__, ##__VA_ARGS__); \
+		PrintToConsel(core::G_KERNEL::g_stdHandle, 0x04, log);\
+		core::G_KERNEL::g_kernel->AsyncLog(nullptr, log); \
 	}\
 }
 
 #define ERROR_LOG(format, ...)\
 {\
-	if(  core::LOG_LEVEL_ERROR >= core::G_KERNEL::g_logLvl)\
-	{\
+	constexpr static const char * name = getFileName(__FILE__, sizeof(__FILE__) - 1);\
+	char log[LOG_BUFF_SIZE] = { 0 }; \
+	SafeSprintf(log, sizeof(log), "[ERROR]: %s:%d:%s | "#format, name, __LINE__, __FUNCTION__, ##__VA_ARGS__); \
+	PrintToConsel(core::G_KERNEL::g_stdHandle, 0x04, log);\
+	core::G_KERNEL::g_kernel->SyncLog(log); \
+}
+
+#define LABEL_LOG(logLvl, label, format, ...)\
+{\
+	if(logLvl >= core::G_KERNEL::g_logLvl)\
+	{									  \
+		constexpr static const char * name = getFileName(__FILE__, sizeof(__FILE__) - 1);\
 		char log[LOG_BUFF_SIZE] = { 0 }; \
-		SafeSprintf(log, sizeof(log), "[ERROR]: %s:%d:%s | "#format, __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__); \
-		core::G_KERNEL::g_kernel->AsyncLog(log); \
+		SafeSprintf(log, sizeof(log), "[%s]: %s:%d:%s | "#format, label, name, __LINE__, __FUNCTION__, ##__VA_ARGS__); \
+		PrintToConsel(core::G_KERNEL::g_stdHandle, 0x02, log);\
+		core::G_KERNEL::g_kernel->AsyncLog(nullptr, log); \
 	}\
 }
 
+#define FILE_LOG(logLvl, fileName, format, ...)\
+{\
+	if(logLvl >= core::G_KERNEL::g_logLvl)\
+	{									  \
+		constexpr static const char * name = getFileName(__FILE__, sizeof(__FILE__) - 1);\
+		char log[LOG_BUFF_SIZE] = { 0 }; \
+		SafeSprintf(log, sizeof(log), "%s:%d:%s | "#format, name, __LINE__, __FUNCTION__, ##__VA_ARGS__); \
+		PrintToConsel(core::G_KERNEL::g_stdHandle, 0x02, log);\
+		core::G_KERNEL::g_kernel->AsyncLog(fileName, log); \
+	}\
+}
+
+
 #define IMPORTANT_LOG(labl, format, ...)\
 {\
+	constexpr static const char * name = getFileName(__FILE__, sizeof(__FILE__) - 1);\
     char log[LOG_BUFF_SIZE] = { 0 }; \
-    SafeSprintf(log, sizeof(log), "[%s]: %s:%d:%s | "#format, labl, __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__); \
+    SafeSprintf(log, sizeof(log), "[%s]: %s:%d:%s | "#format, labl, name, __LINE__, __FUNCTION__, ##__VA_ARGS__); \
+	PrintToConsel(core::G_KERNEL::g_stdHandle, 0x02, log);\
     core::G_KERNEL::g_kernel->SyncLog(log); \
 }
 
 #define THREAD_LOG(labl,format, ...)\
 {\
+	constexpr static const char * name = getFileName(__FILE__, sizeof(__FILE__) - 1);\
     char log[LOG_BUFF_SIZE] = { 0 }; \
-    SafeSprintf(log, sizeof(log), "[%s]: %s:%d:%s | "#format, labl, __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__); \
+    SafeSprintf(log, sizeof(log), "[%s]: %s:%d:%s | "#format, labl, name, __LINE__, __FUNCTION__, ##__VA_ARGS__); \
 	printf("%s\n", log);\
-    core::G_KERNEL::g_kernel->ThreadLog(log); \
+    core::G_KERNEL::g_kernel->ThreadLog(nullptr, log); \
 }
 
 #endif
 #ifdef LINUX
 #define DEBUG_LOG(format, a...)\
 {\
+	if(  core::LOG_LEVEL_DEBUG >= core::G_KERNEL::g_logLvl)\
+	{\
 		constexpr static const char * name = getFileName(__FILE__, sizeof(__FILE__) - 1);\
     	char log[LOG_BUFF_SIZE] = { 0 }; \
         SafeSprintf(log, sizeof(log), "[DEBUG]: %s:%d:%s | "#format, name, __LINE__, __FUNCTION__, ##a); \
-	    core::G_KERNEL::g_kernel->AsyncLog(log);\
+	    core::G_KERNEL::g_kernel->AsyncLog(nullptr, log);\
+	}\
 }
 
 #define TRACE_LOG(format, a...)\
 {\
+	if(  core::LOG_LEVEL_TRACE >= core::G_KERNEL::g_logLvl)\
+	{\
 	constexpr static const char * name = getFileName(__FILE__, sizeof(__FILE__) - 1);\
     char log[LOG_BUFF_SIZE] = { 0 }; \
     SafeSprintf(log, sizeof(log), "[TRACE]: %s:%d:%s | "#format, name, __LINE__, __FUNCTION__, ##a); \
-    core::G_KERNEL::g_kernel->AsyncLog(log); \
+    core::G_KERNEL::g_kernel->AsyncLog(nullptr, log); \
+	}\
 }
 
+#define WARN_LOG(format, ...)\
+{\
+	if(  core::LOG_LEVEL_WARN >= core::G_KERNEL::g_logLvl)\
+	{\
+		constexpr static const char * name = getFileName(__FILE__, sizeof(__FILE__) - 1);\
+		char log[LOG_BUFF_SIZE] = { 0 }; \
+		SafeSprintf(log, sizeof(log), "[WARN]: %s:%d:%s | "#format, name, __LINE__, __FUNCTION__, ##a); \
+		core::G_KERNEL::g_kernel->AsyncLog(nullptr, log); \
+	}\
+}
 
 #define ERROR_LOG(format, a...)\
 {\
 	constexpr static const char * name = getFileName(__FILE__, sizeof(__FILE__) - 1);\
 	char log[LOG_BUFF_SIZE] = { 0 }; \
 	SafeSprintf(log, sizeof(log), "[ERROR]: %s:%d:%s | "#format, name, __LINE__, __FUNCTION__, ##a); \
-	core::G_KERNEL::g_kernel->AsyncLog(log); \
+	core::G_KERNEL::g_kernel->SyncLog(log); \
+}
+
+#define LABEL_LOG(logLvl, label, format, a...)\
+{\
+	if(logLvl >= core::G_KERNEL::g_logLvl)\
+	{									  \
+		constexpr static const char * name = getFileName(__FILE__, sizeof(__FILE__) - 1);\
+		char log[LOG_BUFF_SIZE] = { 0 }; \
+		SafeSprintf(log, sizeof(log), "[%s]: %s:%d:%s | "#format, label, name, __LINE__, __FUNCTION__, ##a); \
+		core::G_KERNEL::g_kernel->AsyncLog(nullptr, log); \
+	}\
 }
 
 #define IMPORTANT_LOG(labl, format, a...)\
 {\
+	constexpr static const char * name = getFileName(__FILE__, sizeof(__FILE__) - 1);\
 	char log[LOG_BUFF_SIZE] = { 0 }; \
-	SafeSprintf(log, sizeof(log), "[%s]: %s:%d:%s | "#format, labl, __FILE__, __LINE__, __FUNCTION__, ##a); \
+	SafeSprintf(log, sizeof(log), "[%s]: %s:%d:%s | "#format, labl, name, __LINE__, __FUNCTION__, ##a); \
 	core::G_KERNEL::g_kernel->SyncLog(log); \
 }
 
 #define THREAD_LOG(labl,format, ...)\
 {\
     char log[LOG_BUFF_SIZE] = { 0 }; \
-    SafeSprintf(log, sizeof(log), "[%s]: %s:%d:%s | "#format, labl, __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__); \
-    core::G_KERNEL::g_kernel->ThreadLog(log); \
+	constexpr static const char * name = getFileName(__FILE__, sizeof(__FILE__) - 1);\
+    SafeSprintf(log, sizeof(log), "[%s]: %s:%d:%s | "#format, labl, name, __LINE__, __FUNCTION__, ##__VA_ARGS__); \
+    core::G_KERNEL::g_kernel->ThreadLog(nullptr, log); \
 }
 
 #endif
@@ -136,13 +198,17 @@ namespace core
 	{
 		static IKernel *g_kernel;
 		static s32 g_logLvl;
+#ifdef WIN32
+		static HANDLE g_stdHandle;
+#endif
 	};
 
 	enum LOG_LEVEL
 	{
 		LOG_LEVEL_DEBUG = 0,
 		LOG_LEVEL_TRACE = 1,
-		LOG_LEVEL_ERROR = 2,
+		LOG_LEVEL_WARN = 2,
+		LOG_LEVEL_ERROR = 3,
 	};
     struct MessageHead
     {
@@ -220,6 +286,7 @@ namespace core
 		inline void SetBase(ITrace * base) { _base = base; }
 		inline ITrace * GetBase() { return _base; }
 
+		//threadIdx范围为[1, threadNum]
 		virtual bool OnExecute(IKernel * kernel, s32 queueId, s32 threadIdx) = 0;
 		virtual void OnSuccess(IKernel * kernel) = 0;
 		virtual void OnFailed(IKernel * kernel, bool isExecuted) = 0;
@@ -232,7 +299,7 @@ namespace core
 	{
 	public:
 		virtual ~IAsyncQueue() {};
-
+		//相同threadId 执行handler保证执行时许
 		virtual void StartAsync(const s64 threadId, IAsyncHandler * handler, const char * file, const s32 line) = 0;
 		virtual void StopAsync(IAsyncHandler * handler) = 0;
 		virtual s32  GetQueueId() = 0;
@@ -252,15 +319,23 @@ namespace core
 		ITrace  *_base;
 	};
 
+	class IModuleProfile
+	{
+	public:
+		IModuleProfile() {};
+		virtual ~IModuleProfile() {};
 
+		virtual const char * Name() = 0;
+		virtual std::string ProfileInfo() = 0;
+	};
 
     class IKernel
     {
     public:
 		//Log
         virtual void SyncLog(const char *contens) = 0;
-        virtual void AsyncLog(const char *contens) = 0;
-		virtual void ThreadLog(const char *contents) = 0;
+		virtual void AsyncLog(const char *fileName, const char *content) = 0;
+		virtual void ThreadLog(const char *fileName, const char *contents) = 0;
 		virtual s32  GetLogLevel() = 0;
 
 		//Module
@@ -284,11 +359,15 @@ namespace core
 		virtual IAsyncQueue * GetMainAsyncQueue() = 0;
 		virtual IAsyncQueue * CreateAsyncQueue(const s32 threadSize, const char *trace) = 0;
 
+		//Profile
+		virtual void AddModuleProfile(core::IModuleProfile *moduleProfile) = 0;
+
 		virtual const char* GetCoreFile() = 0;
         virtual const char* GetConfigFile() = 0;
         virtual const  char* GetEnvirPath() = 0;
         virtual const char * GetCmdArg(const char *name) = 0;
 		virtual const char * GetProcName() = 0;
+		virtual void ShutDown() = 0;
     };
 }
 

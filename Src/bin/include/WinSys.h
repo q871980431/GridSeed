@@ -89,7 +89,14 @@ inline constexpr const char *getFileName(const char *filePath, const int len) { 
          	assert(false); \
 	}\
  }
-
+inline void PrintToConsel(HANDLE handle, s8 color, const char *content)
+{
+#ifdef _DEBUG
+	SetConsoleTextAttribute(handle, color);
+	printf("%s\n",content);
+	SetConsoleTextAttribute(handle, 0x07);
+#endif
+}
 
 #endif
 

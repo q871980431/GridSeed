@@ -1,7 +1,6 @@
 #include "Kernel.h"
 #include "Tools.h"
 #include "TDynPool.h"
-#include "StopWatch.h"
 #include "Configmgr.h"
 #include "Modulemgr.h"
 #include "NetService.h"
@@ -11,6 +10,7 @@
 #include "XmlReader.h"
 #include "ExceptionMgr.h"
 #include "ProfileMgr.h"
+#include "Tools_time.h"
 
 template<> Kernel * Singleton<Kernel>::_instance = nullptr;
 core::IKernel * G_KERNEL::g_kernel = nullptr;
